@@ -66,6 +66,7 @@ export const saveConfigDataSchema = z.object({
   forceTranscodeVideo: z.boolean(),
   forceTranscodeAudio: z.boolean(),
   maxVideoBitrate: z.number(),
+  streamDeliveryMode: z.enum(['both', 'direct', 'hls']).optional(),
 });
 
 export type SaveConfigData = z.infer<typeof saveConfigDataSchema>;

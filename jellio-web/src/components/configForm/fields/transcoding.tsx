@@ -18,6 +18,13 @@ interface Props {
 }
 
 type TranscodingMode = 'adaptive' | 'force' | 'disabled';
+type StreamDeliveryMode = 'both' | 'direct' | 'hls';
+
+interface PickerOption<T extends string> {
+  value: T;
+  label: string;
+  description: string;
+}
 
 const DEFAULT_VALUES = {
   videoTranscodingMode: 'adaptive' as const,
@@ -26,13 +33,31 @@ const DEFAULT_VALUES = {
   forceTranscodeVideo: false,
   forceTranscodeAudio: false,
   maxVideoBitrate: 120,
+  streamDeliveryMode: 'both' as const,
 };
 
-const VIDEO_MODE_OPTIONS: {
-  value: TranscodingMode;
-  label: string;
-  description: string;
-}[] = [
+const DELIVERY_MODE_OPTIONS: PickerOption<StreamDeliveryMode>[] = [
+  {
+    value: 'both',
+    label: 'Direct + HLS',
+    description:
+      'Original file listed first, plus HLS streams that use the transcoding settings below.',
+  },
+  {
+    value: 'direct',
+    label: 'Direct only',
+    description:
+      'Original file with every audio track. Best for players such as mpv; no transcoding.',
+  },
+  {
+    value: 'hls',
+    label: 'HLS only',
+    description:
+      'Jellyfin HLS per audio track, transcoding as configured below.',
+  },
+];
+
+const VIDEO_MODE_OPTIONS: PickerOption<TranscodingMode>[] = [
   {
     value: 'adaptive',
     label: 'Adaptive',
@@ -50,11 +75,7 @@ const VIDEO_MODE_OPTIONS: {
   },
 ];
 
-const AUDIO_MODE_OPTIONS: {
-  value: TranscodingMode;
-  label: string;
-  description: string;
-}[] = [
+const AUDIO_MODE_OPTIONS: PickerOption<TranscodingMode>[] = [
   {
     value: 'adaptive',
     label: 'Adaptive',
@@ -78,14 +99,14 @@ const modeSummary: Record<TranscodingMode, string> = {
   disabled: 'no transcode',
 };
 
-const ModePicker = ({
+const ModePicker = <T extends string>({
   value,
   onChange,
   options,
 }: {
-  value: TranscodingMode;
-  onChange: (value: TranscodingMode) => void;
-  options: typeof VIDEO_MODE_OPTIONS;
+  value: T;
+  onChange: (value: T) => void;
+  options: PickerOption<T>[];
 }) => (
   <div className="grid gap-2 md:grid-cols-3">
     {options.map((option) => {
@@ -145,6 +166,7 @@ export const TranscodingFieldset: FC<Props> = ({ form }) => {
     form.setValue('forceTranscodeVideo', DEFAULT_VALUES.forceTranscodeVideo);
     form.setValue('forceTranscodeAudio', DEFAULT_VALUES.forceTranscodeAudio);
     form.setValue('maxVideoBitrate', DEFAULT_VALUES.maxVideoBitrate);
+    form.setValue('streamDeliveryMode', DEFAULT_VALUES.streamDeliveryMode);
   };
 
   return (
@@ -172,6 +194,28 @@ export const TranscodingFieldset: FC<Props> = ({ form }) => {
           then transcodes only the unsupported track type.
         </p>
       </div>
+
+      <FormField
+        control={form.control}
+        name="streamDeliveryMode"
+        render={({ field }) => (
+          <FormItem className="py-2">
+            <FormLabel>Stream delivery</FormLabel>
+            <FormControl>
+              <ModePicker
+                value={field.value ?? DEFAULT_VALUES.streamDeliveryMode}
+                onChange={field.onChange}
+                options={DELIVERY_MODE_OPTIONS}
+              />
+            </FormControl>
+            <FormDescription>
+              Direct streams skip Jellyfin&apos;s transcoder entirely, so the
+              settings below only affect HLS streams.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       <FormField
         control={form.control}

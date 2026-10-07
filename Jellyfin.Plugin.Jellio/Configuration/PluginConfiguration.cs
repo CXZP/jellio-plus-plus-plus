@@ -19,4 +19,7 @@ public class PluginConfiguration : BasePluginConfiguration
     public bool ForceTranscodeVideo { get; set; } = false;
     public bool ForceTranscodeAudio { get; set; } = false;
     public int MaxVideoBitrate { get; set; } = 120;
+
+    // "direct" (original file), "hls" (Jellyfin HLS with the transcoding settings above) or "both".
+    public string? StreamDeliveryMode { get; set; }
 }

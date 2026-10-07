@@ -18,4 +18,7 @@ public class SaveConfigRequest
     public bool ForceTranscodeVideo { get; set; } = false;
     public bool ForceTranscodeAudio { get; set; } = false;
     public int MaxVideoBitrate { get; set; } = 120;
+
+    // Null keeps the saved value, so an older config page doesn't reset it.
+    public string? StreamDeliveryMode { get; set; }
 }

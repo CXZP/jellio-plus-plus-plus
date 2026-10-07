@@ -34,6 +34,10 @@ public class AddonController : ControllerBase
     private const string TranscodingModeForce = "force";
     private const string TranscodingModeDisabled = "disabled";
 
+    internal const string StreamDeliveryDirect = "direct";
+    internal const string StreamDeliveryHls = "hls";
+    internal const string StreamDeliveryBoth = "both";
+
     private static readonly string PluginVersion =
         Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.0.0";
 
@@ -254,6 +258,94 @@ public class AddonController : ControllerBase
     private static bool IsSupportedTranscodingMode(string? mode)
     {
         return mode is TranscodingModeAdaptive or TranscodingModeForce or TranscodingModeDisabled;
+    }
+
+    internal static string NormalizeStreamDeliveryMode(string? mode)
+    {
+        return mode is StreamDeliveryDirect or StreamDeliveryHls or StreamDeliveryBoth
+            ? mode
+            : StreamDeliveryBoth;
+    }
+
+    // HLS through master.m3u8 always runs Jellyfin's transcode pipeline. With both video and audio
+    // transcoding disabled there is nothing for it to do, so serve the original file instead.
+    internal static bool ShouldIncludeHlsStreams(
+        string streamDeliveryMode,
+        string videoTranscodingMode,
+        string audioTranscodingMode)
+    {
+        var transcodingDisabled = videoTranscodingMode == TranscodingModeDisabled
+            && audioTranscodingMode == TranscodingModeDisabled;
+        return streamDeliveryMode != StreamDeliveryDirect && !transcodingDisabled;
+    }
+
+    internal static bool ShouldIncludeDirectStream(
+        string streamDeliveryMode,
+        string videoTranscodingMode,
+        string audioTranscodingMode)
+    {
+        return streamDeliveryMode != StreamDeliveryHls
+            || !ShouldIncludeHlsStreams(streamDeliveryMode, videoTranscodingMode, audioTranscodingMode);
+    }
+
+    // Original file over plain HTTP (range requests, no ffmpeg). Carries every audio and embedded
+    // subtitle track, so one entry per media source is enough. Both api_key and ApiKey are sent
+    // because newer Jellyfin builds can turn off the legacy api_key parameter.
+    internal static string BuildDirectStreamUrl(string baseUrl, Guid itemId, string mediaSourceId, string authToken)
+    {
+        var query = QueryString.Create(new Dictionary<string, string?>
+        {
+            ["static"] = "true",
+            ["mediaSourceId"] = mediaSourceId,
+            ["ApiKey"] = authToken,
+            ["api_key"] = authToken,
+        });
+        return $"{baseUrl}/Videos/{itemId}/stream{query}";
+    }
+
+    internal static string BuildSubtitleUrl(
+        string baseUrl,
+        Guid itemId,
+        string mediaSourceId,
+        int streamIndex,
+        string format,
+        string authToken)
+    {
+        var token = Uri.EscapeDataString(authToken);
+        return $"{baseUrl}/Videos/{itemId}/{mediaSourceId}/Subtitles/{streamIndex}/Stream.{format}?api_key={token}&ApiKey={token}";
+    }
+
+    private static string DescribeDirectSource(MediaSourceInfo source)
+    {
+        var video = source.MediaStreams.FirstOrDefault(stream => stream.Type == MediaStreamType.Video);
+        var audioCount = source.MediaStreams.Count(stream => stream.Type == MediaStreamType.Audio);
+        var parts = new List<string>();
+        // Width, not height: scope 4K (3840x1600) is still 4K.
+        var resolution = video?.Width switch
+        {
+            >= 3200 => "4K",
+            >= 1900 => "1080p",
+            >= 1200 => "720p",
+            > 0 => $"{video?.Height}p",
+            _ => null,
+        };
+        if (resolution != null)
+        {
+            parts.Add(resolution);
+        }
+
+        if (!string.IsNullOrEmpty(video?.Codec))
+        {
+            parts.Add(video.Codec.ToUpperInvariant());
+        }
+
+        if (source.Size is long size and > 0)
+        {
+            parts.Add(string.Create(CultureInfo.InvariantCulture, $"{size / 1_000_000_000d:0.0} GB"));
+        }
+
+        parts.Add(audioCount == 1 ? "1 audio track" : $"{audioCount} audio tracks");
+        return string.Join(" · ", parts);
     }
 
     private static string DescribeVideoTarget(string mode)
@@ -572,13 +664,14 @@ public class AddonController : ControllerBase
                         "webvtt" => "vtt",
                         _ => "srt",
                     };
-                    var lang = string.IsNullOrEmpty(sub.Language) ? "und" : sub.Language;
-                    var label = string.IsNullOrEmpty(sub.Title) ? lang : sub.Title;
+                    // A bare language code lets clients show a proper language name; the
+                    // track title (e.g. "SDH") rides along in the optional label.
                     return new SubtitleDto
                     {
                         Id = $"jelliopp-{dto.Id}-{sub.Index}",
-                        Url = $"{baseUrl}/Videos/{dto.Id}/{source.Id}/Subtitles/{sub.Index}/0/Stream.{format}?api_key={authToken}",
-                        Lang = $"{label} ({lang})",
+                        Url = BuildSubtitleUrl(baseUrl, dto.Id, source.Id, sub.Index, format, authToken),
+                        Lang = string.IsNullOrEmpty(sub.Language) ? "und" : sub.Language,
+                        Label = string.IsNullOrEmpty(sub.Title) ? null : sub.Title,
                     };
                 }).ToList();
 
@@ -610,14 +703,46 @@ public class AddonController : ControllerBase
                 var enableDirectPlayback = ShouldEnableDirectPlayback(videoTranscodingMode, audioTranscodingMode);
 
                 var audioCodecs = GetAudioCodecs(audioTranscodingMode);
+                var streamDeliveryMode = NormalizeStreamDeliveryMode(pluginConfig?.StreamDeliveryMode);
 
-                return streamChoices.Select(audioStream =>
+                // Shared by every entry for this source; hashing reads the file, so do it once.
+                var behaviorHints = new BehaviorHintsDto
+                {
+                    Filename = string.IsNullOrEmpty(source.Path) ? null : Path.GetFileName(source.Path),
+                    VideoSize = source.Size,
+                    VideoHash = OpenSubtitlesHash.ComputeFromPath(source.Path),
+                    NotWebReady = true,
+                };
+                var streamSubtitles = subtitles.Count > 0 ? subtitles : null;
+                var sourceStreams = new List<StreamDto>();
+
+                // Listed first so clients that auto-play the top entry get the untouched file.
+                if (ShouldIncludeDirectStream(streamDeliveryMode, videoTranscodingMode, audioTranscodingMode))
+                {
+                    LogBuffer.AddLog($"[Stream] Direct stream for {dto.Name} ({dto.Id}), source {source.Id}", LogLevel.Info);
+                    sourceStreams.Add(new StreamDto
+                    {
+                        Url = BuildDirectStreamUrl(baseUrl, dto.Id, source.Id, authToken),
+                        Name = "Jellio++ Direct",
+                        Description = $"{source.Name}\n{DescribeDirectSource(source)}",
+                        BehaviorHints = behaviorHints,
+                        Subtitles = streamSubtitles,
+                    });
+                }
+
+                if (!ShouldIncludeHlsStreams(streamDeliveryMode, videoTranscodingMode, audioTranscodingMode))
+                {
+                    return sourceStreams;
+                }
+
+                return sourceStreams.Concat(streamChoices.Select(audioStream =>
                 {
                     var videoCodecs = GetVideoCodecs(source, videoTranscodingMode);
                     var queryParameters = new Dictionary<string, string?>
                     {
                         ["mediaSourceId"] = source.Id,
                         ["api_key"] = authToken,
+                        ["ApiKey"] = authToken,
                         ["videoCodec"] = string.Join(',', videoCodecs),
                         ["audioCodec"] = string.Join(',', audioCodecs),
                         ["enableDirectPlay"] = enableDirectPlayback ? "true" : "false",
@@ -666,18 +791,12 @@ public class AddonController : ControllerBase
                     return new StreamDto
                     {
                         Url = streamUrl,
-                        Name = $"Jellio++ - {audioLabel}",
+                        Name = $"Jellio++ HLS - {audioLabel}",
                         Description = source.Name,
-                        BehaviorHints = new BehaviorHintsDto
-                        {
-                            Filename = string.IsNullOrEmpty(source.Path) ? null : Path.GetFileName(source.Path),
-                            VideoSize = source.Size,
-                            VideoHash = OpenSubtitlesHash.ComputeFromPath(source.Path),
-                            NotWebReady = true,
-                        },
-                        Subtitles = subtitles.Count > 0 ? subtitles : null,
+                        BehaviorHints = behaviorHints,
+                        Subtitles = streamSubtitles,
                     };
-                });
+                }));
             });
         }).ToList();
 

@@ -30,6 +30,7 @@ const storedConfigSchema = z.object({
   forceTranscodeVideo: z.boolean().optional(),
   forceTranscodeAudio: z.boolean().optional(),
   maxVideoBitrate: z.number().optional(),
+  streamDeliveryMode: z.enum(['both', 'direct', 'hls']).optional(),
 });
 
 type StoredConfig = z.infer<typeof storedConfigSchema>;
@@ -76,6 +77,10 @@ const applyTranscodingConfig = (
 
   if (config.maxVideoBitrate !== undefined) {
     form.setValue('maxVideoBitrate', config.maxVideoBitrate);
+  }
+
+  if (config.streamDeliveryMode !== undefined) {
+    form.setValue('streamDeliveryMode', config.streamDeliveryMode);
   }
 };
 
@@ -175,6 +180,7 @@ export const useConfigStorage = (
         forceTranscodeVideo: values.forceTranscodeVideo,
         forceTranscodeAudio: values.forceTranscodeAudio,
         maxVideoBitrate: values.maxVideoBitrate,
+        streamDeliveryMode: values.streamDeliveryMode,
       };
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(config));

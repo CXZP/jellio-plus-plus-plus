@@ -183,7 +183,8 @@ public class WebController : ControllerBase
                 enableDirectStreaming = true,
                 forceTranscodeVideo = false,
                 forceTranscodeAudio = false,
-                maxVideoBitrate = 120
+                maxVideoBitrate = 120,
+                streamDeliveryMode = AddonController.StreamDeliveryBoth,
             });
         }
 
@@ -207,7 +208,8 @@ public class WebController : ControllerBase
             enableDirectStreaming = config.EnableDirectStreaming,
             forceTranscodeVideo = config.ForceTranscodeVideo,
             forceTranscodeAudio = config.ForceTranscodeAudio,
-            maxVideoBitrate = config.MaxVideoBitrate
+            maxVideoBitrate = config.MaxVideoBitrate,
+            streamDeliveryMode = AddonController.NormalizeStreamDeliveryMode(config.StreamDeliveryMode),
         });
     }
 
@@ -271,6 +273,10 @@ public class WebController : ControllerBase
         config.ForceTranscodeVideo = videoTranscodingMode == TranscodingModeForce;
         config.ForceTranscodeAudio = audioTranscodingMode == TranscodingModeForce;
         config.MaxVideoBitrate = request.MaxVideoBitrate;
+        if (request.StreamDeliveryMode != null)
+        {
+            config.StreamDeliveryMode = AddonController.NormalizeStreamDeliveryMode(request.StreamDeliveryMode);
+        }
 
         Plugin.Instance.SaveConfiguration();
 

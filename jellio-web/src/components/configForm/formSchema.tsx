@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const transcodingModeSchema = z.enum(['adaptive', 'force', 'disabled']);
+export const streamDeliveryModeSchema = z.enum(['both', 'direct', 'hls']);
 
 export const formSchema = z.object({
   serverName: z.string(),
@@ -22,6 +23,7 @@ export const formSchema = z.object({
   forceTranscodeVideo: z.boolean().default(false),
   forceTranscodeAudio: z.boolean().default(false),
   maxVideoBitrate: z.number().min(10).max(200).default(120),
+  streamDeliveryMode: streamDeliveryModeSchema.default('both'),
 });
 
 export type ConfigFormType = z.input<typeof formSchema>;
