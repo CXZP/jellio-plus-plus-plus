@@ -2,6 +2,12 @@ import { z } from 'zod';
 
 export const transcodingModeSchema = z.enum(['adaptive', 'force', 'disabled']);
 export const streamDeliveryModeSchema = z.enum(['both', 'direct', 'hls']);
+export const maxVideoHeightSchema = z.union([
+  z.literal(2160),
+  z.literal(1440),
+  z.literal(1080),
+  z.literal(720),
+]);
 
 export const formSchema = z.object({
   serverName: z.string(),
@@ -22,7 +28,8 @@ export const formSchema = z.object({
   enableDirectStreaming: z.boolean().default(true),
   forceTranscodeVideo: z.boolean().default(false),
   forceTranscodeAudio: z.boolean().default(false),
-  maxVideoBitrate: z.number().min(10).max(200).default(120),
+  maxVideoBitrate: z.number().min(2).max(200).default(120),
+  maxVideoHeight: maxVideoHeightSchema.default(2160),
   streamDeliveryMode: streamDeliveryModeSchema.default('both'),
 });
 

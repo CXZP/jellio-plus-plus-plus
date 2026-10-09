@@ -44,6 +44,7 @@ const ConfigForm: FC<Props> = ({ serverInfo }) => {
       forceTranscodeVideo: false,
       forceTranscodeAudio: false,
       maxVideoBitrate: 120,
+      maxVideoHeight: 2160,
       streamDeliveryMode: 'both',
     },
   });
@@ -79,6 +80,7 @@ const ConfigForm: FC<Props> = ({ serverInfo }) => {
           forceTranscodeVideo: values.forceTranscodeVideo ?? false,
           forceTranscodeAudio: values.forceTranscodeAudio ?? false,
           maxVideoBitrate: values.maxVideoBitrate ?? 120,
+          maxVideoHeight: values.maxVideoHeight ?? 2160,
           streamDeliveryMode: values.streamDeliveryMode ?? 'both',
         },
         token: serverInfo.accessToken,

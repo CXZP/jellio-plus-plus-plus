@@ -20,6 +20,9 @@ public class PluginConfiguration : BasePluginConfiguration
     public bool ForceTranscodeAudio { get; set; } = false;
     public int MaxVideoBitrate { get; set; } = 120;
 
+    // Tallest picture HLS may send (2160, 1440, 1080 or 720); Jellyfin scales taller video down.
+    public int MaxVideoHeight { get; set; } = 2160;
+
     // "direct" (original file), "hls" (Jellyfin HLS with the transcoding settings above) or "both".
     public string? StreamDeliveryMode { get; set; }
 }

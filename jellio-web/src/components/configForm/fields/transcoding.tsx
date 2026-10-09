@@ -33,8 +33,37 @@ const DEFAULT_VALUES = {
   forceTranscodeVideo: false,
   forceTranscodeAudio: false,
   maxVideoBitrate: 120,
+  maxVideoHeight: 2160 as const,
   streamDeliveryMode: 'both' as const,
 };
+
+type MaxVideoHeight = '2160' | '1440' | '1080' | '720';
+
+const MAX_HEIGHT_OPTIONS: PickerOption<MaxVideoHeight>[] = [
+  {
+    value: '2160',
+    label: '4K',
+    description: 'No scaling. 4K stays 4K, 1080p stays 1080p.',
+  },
+  {
+    value: '1440',
+    label: '1440p',
+    description:
+      'Video taller than 1440p is scaled down; smaller keeps its size.',
+  },
+  {
+    value: '1080',
+    label: '1080p',
+    description:
+      'Video taller than 1080p is scaled down. Good for phones and slow uploads.',
+  },
+  {
+    value: '720',
+    label: '720p',
+    description:
+      'Video taller than 720p is scaled down. For very slow connections.',
+  },
+];
 
 const DELIVERY_MODE_OPTIONS: PickerOption<StreamDeliveryMode>[] = [
   {
@@ -103,12 +132,14 @@ const ModePicker = <T extends string>({
   value,
   onChange,
   options,
+  columns = 'md:grid-cols-3',
 }: {
   value: T;
   onChange: (value: T) => void;
   options: PickerOption<T>[];
+  columns?: string;
 }) => (
-  <div className="grid gap-2 md:grid-cols-3">
+  <div className={cn('grid gap-2', columns)}>
     {options.map((option) => {
       const selected = value === option.value;
       return (
@@ -166,6 +197,7 @@ export const TranscodingFieldset: FC<Props> = ({ form }) => {
     form.setValue('forceTranscodeVideo', DEFAULT_VALUES.forceTranscodeVideo);
     form.setValue('forceTranscodeAudio', DEFAULT_VALUES.forceTranscodeAudio);
     form.setValue('maxVideoBitrate', DEFAULT_VALUES.maxVideoBitrate);
+    form.setValue('maxVideoHeight', DEFAULT_VALUES.maxVideoHeight);
     form.setValue('streamDeliveryMode', DEFAULT_VALUES.streamDeliveryMode);
   };
 
@@ -266,9 +298,9 @@ export const TranscodingFieldset: FC<Props> = ({ form }) => {
             <FormControl>
               <input
                 type="range"
-                min="10"
+                min="2"
                 max="200"
-                step="10"
+                step="2"
                 className="w-full"
                 value={field.value}
                 onChange={(e) => field.onChange(parseInt(e.target.value))}
@@ -278,6 +310,33 @@ export const TranscodingFieldset: FC<Props> = ({ form }) => {
               A low ceiling can trigger Jellyfin transcoding even when direct
               streaming is preferred. Use a high value for quality testing, then
               lower it only if the network buffers.
+            </FormDescription>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="maxVideoHeight"
+        render={({ field }) => (
+          <FormItem className="py-2">
+            <FormLabel>Max resolution</FormLabel>
+            <FormControl>
+              <ModePicker
+                value={
+                  String(
+                    field.value ?? DEFAULT_VALUES.maxVideoHeight,
+                  ) as MaxVideoHeight
+                }
+                onChange={(value) => field.onChange(Number(value))}
+                options={MAX_HEIGHT_OPTIONS}
+                columns="grid-cols-2 md:grid-cols-4"
+              />
+            </FormControl>
+            <FormDescription>
+              Taller video is transcoded down to this size. At a low bitrate
+              ceiling, a smaller picture looks cleaner than a blocky 4K one.
             </FormDescription>
             <FormMessage />
           </FormItem>

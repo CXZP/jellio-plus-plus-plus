@@ -20,5 +20,8 @@ public class SaveConfigRequest
     public int MaxVideoBitrate { get; set; } = 120;
 
     // Null keeps the saved value, so an older config page doesn't reset it.
+    public int? MaxVideoHeight { get; set; }
+
+    // Null keeps the saved value, so an older config page doesn't reset it.
     public string? StreamDeliveryMode { get; set; }
 }

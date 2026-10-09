@@ -184,6 +184,7 @@ public class WebController : ControllerBase
                 forceTranscodeVideo = false,
                 forceTranscodeAudio = false,
                 maxVideoBitrate = 120,
+                maxVideoHeight = AddonController.DefaultMaxVideoHeight,
                 streamDeliveryMode = AddonController.StreamDeliveryBoth,
             });
         }
@@ -209,6 +210,7 @@ public class WebController : ControllerBase
             forceTranscodeVideo = config.ForceTranscodeVideo,
             forceTranscodeAudio = config.ForceTranscodeAudio,
             maxVideoBitrate = config.MaxVideoBitrate,
+            maxVideoHeight = AddonController.NormalizeMaxVideoHeight(config.MaxVideoHeight),
             streamDeliveryMode = AddonController.NormalizeStreamDeliveryMode(config.StreamDeliveryMode),
         });
     }
@@ -273,6 +275,11 @@ public class WebController : ControllerBase
         config.ForceTranscodeVideo = videoTranscodingMode == TranscodingModeForce;
         config.ForceTranscodeAudio = audioTranscodingMode == TranscodingModeForce;
         config.MaxVideoBitrate = request.MaxVideoBitrate;
+        if (request.MaxVideoHeight.HasValue)
+        {
+            config.MaxVideoHeight = AddonController.NormalizeMaxVideoHeight(request.MaxVideoHeight.Value);
+        }
+
         if (request.StreamDeliveryMode != null)
         {
             config.StreamDeliveryMode = AddonController.NormalizeStreamDeliveryMode(request.StreamDeliveryMode);

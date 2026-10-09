@@ -138,6 +138,32 @@ public class AddonControllerTranscodingTests
     }
 
     [Fact]
+    public void DescribeJellyfinStreamMode_AdaptiveTallerThanMaxHeight_ReportsTranscode()
+    {
+        var source = CreateSource("hevc", width: 3840, height: 2160, audioCodec: "aac", bitrate: 8000000);
+        var audioStream = source.MediaStreams.First(stream => stream.Type == MediaStreamType.Audio);
+
+        var mode = AddonController.DescribeJellyfinStreamMode(source, audioStream, "adaptive", "adaptive", 120, 1080);
+
+        Assert.Equal("Transcoding expected (video height 2160p exceeds max 1080p)", mode);
+    }
+
+    [Theory]
+    [InlineData(2160, 2160, 3840)]
+    [InlineData(1440, 1440, 2560)]
+    [InlineData(1080, 1080, 1920)]
+    [InlineData(720, 720, 1280)]
+    [InlineData(0, 2160, 3840)]
+    [InlineData(480, 2160, 3840)]
+    public void NormalizeMaxVideoHeight_KnownHeightsOnly(int height, int expectedHeight, int expectedWidth)
+    {
+        var normalized = AddonController.NormalizeMaxVideoHeight(height);
+
+        Assert.Equal(expectedHeight, normalized);
+        Assert.Equal(expectedWidth, AddonController.MaxVideoWidthFor(normalized));
+    }
+
+    [Fact]
     public void DescribeJellyfinStreamMode_DisabledUnsupportedAudio_ReportsNoTranscodeWarning()
     {
         var source = CreateSource("h264", width: 1920, height: 1080, audioCodec: "truehd");

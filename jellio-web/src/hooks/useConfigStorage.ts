@@ -1,7 +1,10 @@
 import { useEffect } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
-import type { ConfigFormType } from '@/components/configForm/formSchema';
+import {
+  type ConfigFormType,
+  maxVideoHeightSchema,
+} from '@/components/configForm/formSchema';
 import { getConfigFromServer } from '@/services/backendService';
 import type { Library } from '@/types';
 
@@ -30,6 +33,7 @@ const storedConfigSchema = z.object({
   forceTranscodeVideo: z.boolean().optional(),
   forceTranscodeAudio: z.boolean().optional(),
   maxVideoBitrate: z.number().optional(),
+  maxVideoHeight: maxVideoHeightSchema.optional(),
   streamDeliveryMode: z.enum(['both', 'direct', 'hls']).optional(),
 });
 
@@ -77,6 +81,10 @@ const applyTranscodingConfig = (
 
   if (config.maxVideoBitrate !== undefined) {
     form.setValue('maxVideoBitrate', config.maxVideoBitrate);
+  }
+
+  if (config.maxVideoHeight !== undefined) {
+    form.setValue('maxVideoHeight', config.maxVideoHeight);
   }
 
   if (config.streamDeliveryMode !== undefined) {
@@ -180,6 +188,7 @@ export const useConfigStorage = (
         forceTranscodeVideo: values.forceTranscodeVideo,
         forceTranscodeAudio: values.forceTranscodeAudio,
         maxVideoBitrate: values.maxVideoBitrate,
+        maxVideoHeight: values.maxVideoHeight,
         streamDeliveryMode: values.streamDeliveryMode,
       };
 

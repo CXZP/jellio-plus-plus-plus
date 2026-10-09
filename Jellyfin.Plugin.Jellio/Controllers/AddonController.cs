@@ -267,6 +267,19 @@ public class AddonController : ControllerBase
             : StreamDeliveryBoth;
     }
 
+    internal const int DefaultMaxVideoHeight = 2160;
+
+    internal static int NormalizeMaxVideoHeight(int height)
+    {
+        return height is 2160 or 1440 or 1080 or 720 ? height : DefaultMaxVideoHeight;
+    }
+
+    // 16:9 width for the height; Jellyfin keeps the aspect ratio within both limits.
+    internal static int MaxVideoWidthFor(int maxVideoHeight)
+    {
+        return maxVideoHeight * 16 / 9;
+    }
+
     // HLS through master.m3u8 always runs Jellyfin's transcode pipeline. With both video and audio
     // transcoding disabled there is nothing for it to do, so serve the original file instead.
     internal static bool ShouldIncludeHlsStreams(
@@ -435,14 +448,16 @@ public class AddonController : ControllerBase
         MediaStream? audioStream,
         string videoTranscodingMode,
         string audioTranscodingMode,
-        int maxVideoBitrate)
+        int maxVideoBitrate,
+        int maxVideoHeight = DefaultMaxVideoHeight)
     {
         var transcodeReasons = GetExpectedTranscodeReasons(
             source,
             audioStream,
             videoTranscodingMode,
             audioTranscodingMode,
-            maxVideoBitrate);
+            maxVideoBitrate,
+            maxVideoHeight);
 
         if (transcodeReasons.Count > 0)
         {
@@ -463,7 +478,8 @@ public class AddonController : ControllerBase
         MediaStream? audioStream,
         string videoTranscodingMode,
         string audioTranscodingMode,
-        int maxVideoBitrate)
+        int maxVideoBitrate,
+        int maxVideoHeight)
     {
         var reasons = new List<string>();
         var videoStream = source.MediaStreams
@@ -486,6 +502,10 @@ public class AddonController : ControllerBase
             else if (source.Bitrate.HasValue && source.Bitrate.Value > maxVideoBitrate * 1000000)
             {
                 reasons.Add($"source bitrate {FormatBitrate(source.Bitrate.Value)} exceeds max {maxVideoBitrate} Mbps");
+            }
+            else if (videoStream?.Height > maxVideoHeight)
+            {
+                reasons.Add($"video height {videoStream.Height}p exceeds max {maxVideoHeight}p");
             }
         }
 
@@ -703,6 +723,7 @@ public class AddonController : ControllerBase
                 var forceTranscodeVideo = pluginConfig?.ForceTranscodeVideo ?? false;
                 var forceTranscodeAudio = pluginConfig?.ForceTranscodeAudio ?? false;
                 var maxVideoBitrate = pluginConfig?.MaxVideoBitrate ?? 120;
+                var maxVideoHeight = NormalizeMaxVideoHeight(pluginConfig?.MaxVideoHeight ?? DefaultMaxVideoHeight);
                 var videoTranscodingMode = NormalizeVideoTranscodingMode(
                     pluginConfig?.VideoTranscodingMode,
                     forceTranscodeVideo,
@@ -767,8 +788,8 @@ public class AddonController : ControllerBase
                         ["allowVideoStreamCopy"] = allowVideoStreamCopy ? "true" : "false",
                         ["allowAudioStreamCopy"] = allowAudioStreamCopy ? "true" : "false",
                         ["videoBitRate"] = $"{maxVideoBitrate * 1000000}",
-                        ["maxWidth"] = "3840",
-                        ["maxHeight"] = "2160",
+                        ["maxWidth"] = MaxVideoWidthFor(maxVideoHeight).ToString(CultureInfo.InvariantCulture),
+                        ["maxHeight"] = maxVideoHeight.ToString(CultureInfo.InvariantCulture),
                     };
 
                     if (audioStream != null)
@@ -798,7 +819,8 @@ public class AddonController : ControllerBase
                         audioStream,
                         videoTranscodingMode,
                         audioTranscodingMode,
-                        maxVideoBitrate);
+                        maxVideoBitrate,
+                        maxVideoHeight);
                     LogBuffer.AddLog($"[Stream]   Jellyfin mode: {jellyfinStreamMode}", LogLevel.Info);
 
                     LogBuffer.AddLog($"[Stream]   URL: {streamUrl}", LogLevel.Info);
