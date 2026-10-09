@@ -1,4 +1,6 @@
 using Jellyfin.Plugin.Jellio.Controllers;
+using Jellyfin.Plugin.Jellio.Models;
+using MediaBrowser.Model.Entities;
 
 namespace Jellyfin.Plugin.Jellio.Tests.Controllers;
 
@@ -68,5 +70,23 @@ public class AddonControllerStreamDeliveryTests
             "https://jellyfin.example/Videos/88cf5e8e-f21a-af3f-c857-95c583d754fe/88cf5e8ef21aaf3fc85795c583d754fe"
                 + "/Subtitles/5/Stream.ass?api_key=token123&ApiKey=token123",
             url);
+    }
+
+    [Fact]
+    public void SubtitlesForDirectStream_KeepsOnlySubtitleFilesNextToTheVideo()
+    {
+        var streams = new[]
+        {
+            new MediaStream { Index = 3, IsExternal = false },
+            new MediaStream { Index = 4, IsExternal = false },
+            new MediaStream { Index = 0, IsExternal = true },
+        };
+        var subtitles = streams
+            .Select(s => new SubtitleDto { Id = $"sub-{s.Index}", Url = $"https://jf/{s.Index}.srt", Lang = "eng" })
+            .ToList();
+
+        var direct = AddonController.SubtitlesForDirectStream(streams, subtitles);
+
+        Assert.Equal(new[] { "sub-0" }, direct.Select(s => s.Id));
     }
 }

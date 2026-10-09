@@ -303,6 +303,19 @@ public class AddonController : ControllerBase
         return $"{baseUrl}/Videos/{itemId}/stream{query}";
     }
 
+    // The direct entry plays the original file, which already carries its embedded tracks. Listing
+    // them again shows every track twice in the player and makes Jellyfin extract them for nothing.
+    // Subtitle files next to the video are not in the file, so those are still listed.
+    internal static List<SubtitleDto> SubtitlesForDirectStream(
+        IReadOnlyList<MediaStream> subtitleStreams,
+        IReadOnlyList<SubtitleDto> subtitles)
+    {
+        return subtitleStreams.Zip(subtitles)
+            .Where(pair => pair.First.IsExternal)
+            .Select(pair => pair.Second)
+            .ToList();
+    }
+
     internal static string BuildSubtitleUrl(
         string baseUrl,
         Guid itemId,
@@ -720,13 +733,14 @@ public class AddonController : ControllerBase
                 if (ShouldIncludeDirectStream(streamDeliveryMode, videoTranscodingMode, audioTranscodingMode))
                 {
                     LogBuffer.AddLog($"[Stream] Direct stream for {dto.Name} ({dto.Id}), source {source.Id}", LogLevel.Info);
+                    var directSubtitles = SubtitlesForDirectStream(subtitleStreams, subtitles);
                     sourceStreams.Add(new StreamDto
                     {
                         Url = BuildDirectStreamUrl(baseUrl, dto.Id, source.Id, authToken),
                         Name = "Jellio++ Direct",
                         Description = $"{source.Name}\n{DescribeDirectSource(source)}",
                         BehaviorHints = behaviorHints,
-                        Subtitles = streamSubtitles,
+                        Subtitles = directSubtitles.Count > 0 ? directSubtitles : null,
                     });
                 }
 
