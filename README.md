@@ -15,6 +15,8 @@
   subtitles (PGS) and embedded tracks are kept, and Jellyfin doesn't transcode.
   The HLS entries stay below it as a fallback.
 - Logo and background images in catalog items, and descriptions as plain text.
+- A **Max resolution** setting for the HLS entries (4K, 1440p, 1080p or 720p),
+  so a slow upload can get a clean 1080p stream instead of a blocky 4K one.
 
 **Installing**
 
@@ -110,11 +112,16 @@ These apply to the HLS entries; the Direct entry is never transcoded.
 
 - **Video Transcoding Mode** (default: Adaptive) - Adaptive copies AV1 up to 1080p, HEVC, and H.264 when supported and transcodes unsupported video; Force Transcode always re-encodes to H.264; No Transcode never requests video transcoding
 - **Audio Transcoding Mode** (default: Adaptive) - Adaptive copies Opus/EAC3/AAC when supported and transcodes unsupported audio; Force Transcode always re-encodes to AAC; No Transcode never requests audio transcoding
-- **Max Video Bitrate** - Maximum video bitrate in Mbps (10-200, default: 120)
+- **Max Video Bitrate** - Maximum video bitrate in Mbps (2-200, default: 120)
+- **Max Resolution** (default: 4K) - Video taller than this is scaled down (4K, 1440p, 1080p or 720p); smaller video keeps its size
+
+### Watching away from home
+
+Everything you watch away from home goes through your home connection's upload, which is often far below what a 4K remux needs (~80 Mbps). Set **Video Transcoding Mode** to Force Transcode, **Max Resolution** to 1080p and **Max Video Bitrate** to about half your upload speed. Then pick a **Jellio HLS** entry when you're away and **Jellio Direct** at home.
 
 ### Public Base URL
 
-If your Jellyfin server is behind a reverse proxy, Cloudflare Tunnel, or Tailscale Funnel, set the public HTTPS URL here so Stremio can reach it.
+If your Jellyfin server is behind a reverse proxy, Cloudflare Tunnel, or Tailscale Serve/Funnel, set the public HTTPS URL here so Stremio can reach it.
 
 ## Development
 
