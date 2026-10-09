@@ -19,7 +19,7 @@
 **Installing**
 
 Download the zip from [Releases](https://github.com/CXZP/jellio-plus-plus-plus/releases) and follow the
-[Installation](#installation) steps below (Stremio needs your Jellyfin over HTTPS).
+[Installation](#installation) steps below.
 
 It uses its own plugin ID, addon ID and URLs (`/jelliodirect/...`), so it can be
 installed next to the official Jellio++ without the two overwriting each other.
@@ -83,7 +83,7 @@ Enable the optional Jellyseerr functionality to be able to directly request medi
 
 ### Installation
 
-NOTICE: Your Jellyfin instance needs to be reachable over HTTPS because Stremio requires HTTPS for addon URLs. You need an HTTPS tunnel such as Cloudflare Tunnel, Tailscale Funnel, ngrok, etc.
+NOTICE: If Stremio runs on the same computer as Jellyfin, the default `http://127.0.0.1:8096` addon link works as is. For Stremio on other devices, Jellyfin needs to be reachable over HTTPS, because Stremio requires HTTPS for remote addon URLs: use a tunnel or reverse proxy such as Tailscale Serve/Funnel, Cloudflare Tunnel, ngrok, etc., and set it as the Public URL. Behind Tailscale Serve or another HTTPS proxy, the Public URL is required: without it, poster and video links point to plain `http://` on the proxy host and don't load.
 
 Jellio Direct isn't in a plugin repository; install it from the zip:
 
@@ -143,4 +143,4 @@ Served at http://localhost:5173/jelliodirect/. All API calls are mocked with MSW
 
 - Jellyfin 12.0.0+
 - Stremio (any platform)
-- HTTPS access to Jellyfin (required by Stremio)
+- HTTPS access to Jellyfin, for Stremio on devices other than the Jellyfin server
