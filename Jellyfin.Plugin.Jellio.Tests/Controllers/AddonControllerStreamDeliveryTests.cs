@@ -1,5 +1,6 @@
 using Jellyfin.Plugin.Jellio.Controllers;
 using Jellyfin.Plugin.Jellio.Models;
+using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.Entities;
 
 namespace Jellyfin.Plugin.Jellio.Tests.Controllers;
@@ -88,5 +89,34 @@ public class AddonControllerStreamDeliveryTests
         var direct = AddonController.SubtitlesForDirectStream(streams, subtitles);
 
         Assert.Equal(new[] { "sub-0" }, direct.Select(s => s.Id));
+    }
+
+    [Fact]
+    public void MapToMeta_CatalogItemsCarryLogoAndBackground()
+    {
+        var withArt = new BaseItemDto
+        {
+            Id = ItemId,
+            Name = "Dune",
+            ProviderIds = new Dictionary<string, string>(),
+            ImageTags = new Dictionary<ImageType, string> { [ImageType.Logo] = "tag" },
+            BackdropImageTags = ["tag"],
+        };
+        var withoutArt = new BaseItemDto
+        {
+            Id = ItemId,
+            Name = "Plain",
+            ProviderIds = new Dictionary<string, string>(),
+            ImageTags = new Dictionary<ImageType, string>(),
+            BackdropImageTags = [],
+        };
+
+        var meta = AddonController.MapToMeta(withArt, StremioType.Movie, "https://jf");
+        var plain = AddonController.MapToMeta(withoutArt, StremioType.Movie, "https://jf");
+
+        Assert.Equal($"https://jf/Items/{ItemId}/Images/Logo", meta.Logo);
+        Assert.Equal($"https://jf/Items/{ItemId}/Images/Backdrop/0", meta.Background);
+        Assert.Null(plain.Logo);
+        Assert.Null(plain.Background);
     }
 }

@@ -562,7 +562,7 @@ public class AddonController : ControllerBase
         return (bitrate / 1000000D).ToString("0.##", CultureInfo.InvariantCulture) + " Mbps";
     }
 
-    private static MetaDto MapToMeta(
+    internal static MetaDto MapToMeta(
         BaseItemDto dto,
         StremioType stremioType,
         string baseUrl,
@@ -599,6 +599,14 @@ public class AddonController : ControllerBase
             Description = dto.Overview,
             ImdbRating = dto.CommunityRating?.ToString("F1", CultureInfo.InvariantCulture),
             ReleaseInfo = releaseInfo,
+            // Catalog items carry them too, so home screens and heroes can show the title logo and
+            // backdrop without fetching the full meta first.
+            Logo = dto.ImageTags?.ContainsKey(ImageType.Logo) == true
+                ? $"{baseUrl}/Items/{dto.Id}/Images/Logo"
+                : null,
+            Background = dto.BackdropImageTags?.Length > 0
+                ? $"{baseUrl}/Items/{dto.Id}/Images/Backdrop/0"
+                : null,
         };
 
         if (includeDetails)
@@ -606,13 +614,6 @@ public class AddonController : ControllerBase
             meta.Runtime =
                 dto.RunTimeTicks.HasValue && dto.RunTimeTicks.Value != 0
                     ? $"{dto.RunTimeTicks.Value / 600000000} min"
-                    : null;
-            meta.Logo = dto.ImageTags.ContainsKey(ImageType.Logo)
-                ? $"{baseUrl}/Items/{dto.Id}/Images/Logo"
-                : null;
-            meta.Background =
-                dto.BackdropImageTags.Length != 0
-                    ? $"{baseUrl}/Items/{dto.Id}/Images/Backdrop/0"
                     : null;
             meta.Released = dto.PremiereDate?.ToString("o");
         }
