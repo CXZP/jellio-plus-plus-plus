@@ -6,8 +6,7 @@
 > ([#14](https://github.com/wujekbogdan/jellio-plus-plus/pull/14)). Once that is
 > released, switch back to Jellio++; this build won't be maintained after that.
 >
-> It is based on the older Jellio+++ code by hexSB, not on the current Jellio++,
-> and was made with AI help.
+> It is based on the older Jellio+++ code by hexSB, not on the current Jellio++.
 
 **What it adds**
 
