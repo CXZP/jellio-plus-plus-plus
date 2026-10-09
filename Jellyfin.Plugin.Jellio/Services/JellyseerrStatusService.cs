@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Jellyfin.Plugin.Jellio.Services;
+namespace Jellyfin.Plugin.JellioDirect.Services;
 
 public static class JellyseerrStatusService
 {

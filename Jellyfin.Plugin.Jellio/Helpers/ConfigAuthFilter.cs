@@ -1,11 +1,11 @@
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Jellio.Models;
+using Jellyfin.Plugin.JellioDirect.Models;
 using MediaBrowser.Controller.Devices;
 using MediaBrowser.Controller.Library;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Jellyfin.Plugin.Jellio.Helpers;
+namespace Jellyfin.Plugin.JellioDirect.Helpers;
 
 public class ConfigAuthFilter(IUserManager userManager, IDeviceManager deviceManager)
     : IAsyncActionFilter

@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text;
-using Jellyfin.Plugin.Jellio.Services;
+using Jellyfin.Plugin.JellioDirect.Services;
 
-namespace Jellyfin.Plugin.Jellio.Tests.Services;
+namespace Jellyfin.Plugin.JellioDirect.Tests.Services;
 
 public class JellyseerrStatusServiceTests
 {

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Reflection;
-using Jellyfin.Plugin.Jellio.Helpers;
-using Jellyfin.Plugin.Jellio.Models;
+using Jellyfin.Plugin.JellioDirect.Helpers;
+using Jellyfin.Plugin.JellioDirect.Models;
 using MediaBrowser.Controller;
 using MediaBrowser.Controller.Devices;
 using MediaBrowser.Controller.Dto;
@@ -14,7 +14,7 @@ using MediaBrowser.Model.Dto; // BaseItemDto
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-namespace Jellyfin.Plugin.Jellio.Controllers;
+namespace Jellyfin.Plugin.JellioDirect.Controllers;
 
 [ApiController]
 [Route("jelliodirect")]
@@ -84,7 +84,7 @@ public class WebController : ControllerBase
     [HttpGet("{config?}/configure")]
     public IActionResult GetIndex(string? config = null)
     {
-        const string ResourceName = "Jellyfin.Plugin.Jellio.Web.index.html";
+        const string ResourceName = "Jellyfin.Plugin.JellioDirect.Web.index.html";
 
         var resourceStream = _executingAssembly.GetManifestResourceStream(ResourceName);
 

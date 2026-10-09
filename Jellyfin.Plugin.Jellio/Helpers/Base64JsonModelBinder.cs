@@ -2,12 +2,12 @@ using System;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Jellio.Models;
+using Jellyfin.Plugin.JellioDirect.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
-namespace Jellyfin.Plugin.Jellio.Helpers;
+namespace Jellyfin.Plugin.JellioDirect.Helpers;
 
 public class Base64JsonModelBinder : IModelBinder
 {

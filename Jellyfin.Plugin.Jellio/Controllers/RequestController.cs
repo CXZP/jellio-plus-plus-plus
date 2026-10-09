@@ -4,12 +4,12 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Jellio.Helpers;
-using Jellyfin.Plugin.Jellio.Models;
-using Jellyfin.Plugin.Jellio.Services;
+using Jellyfin.Plugin.JellioDirect.Helpers;
+using Jellyfin.Plugin.JellioDirect.Models;
+using Jellyfin.Plugin.JellioDirect.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Jellyfin.Plugin.Jellio.Controllers;
+namespace Jellyfin.Plugin.JellioDirect.Controllers;
 
 [ApiController]
 [ConfigAuthorize]

@@ -3,7 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-namespace Jellyfin.Plugin.Jellio.Helpers;
+namespace Jellyfin.Plugin.JellioDirect.Helpers;
 
 /// <summary>
 /// Computes the OpenSubtitles hash for a video file.

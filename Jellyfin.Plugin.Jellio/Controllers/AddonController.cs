@@ -9,9 +9,9 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Data.Enums;
-using Jellyfin.Plugin.Jellio.Helpers;
-using Jellyfin.Plugin.Jellio.Models;
-using Jellyfin.Plugin.Jellio.Services;
+using Jellyfin.Plugin.JellioDirect.Helpers;
+using Jellyfin.Plugin.JellioDirect.Models;
+using Jellyfin.Plugin.JellioDirect.Services;
 using MediaBrowser.Controller.Dto;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.TV;
@@ -22,7 +22,7 @@ using MediaBrowser.Model.Querying;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Jellyfin.Plugin.Jellio.Controllers;
+namespace Jellyfin.Plugin.JellioDirect.Controllers;
 
 [ApiController]
 [ConfigAuthorize]

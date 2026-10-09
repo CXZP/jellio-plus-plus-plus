@@ -6,7 +6,7 @@ using MediaBrowser.Controller.Devices;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Session;
 
-namespace Jellyfin.Plugin.Jellio.Helpers;
+namespace Jellyfin.Plugin.JellioDirect.Helpers;
 
 public static class RequestHelpers
 {

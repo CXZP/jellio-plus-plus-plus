@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using MediaBrowser.Model.Plugins;
 
-namespace Jellyfin.Plugin.Jellio.Configuration;
+namespace Jellyfin.Plugin.JellioDirect.Configuration;
 
 public class PluginConfiguration : BasePluginConfiguration
 {

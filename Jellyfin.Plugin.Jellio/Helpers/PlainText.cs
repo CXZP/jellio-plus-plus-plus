@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace Jellyfin.Plugin.Jellio.Helpers;
+namespace Jellyfin.Plugin.JellioDirect.Helpers;
 
 /// <summary>
 /// Turns the HTML some metadata providers put in overviews (line breaks, italics, entities) into

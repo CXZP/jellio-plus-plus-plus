@@ -1,4 +1,4 @@
-namespace Jellyfin.Plugin.Jellio.Helpers;
+namespace Jellyfin.Plugin.JellioDirect.Helpers;
 
 public enum LogLevel
 {

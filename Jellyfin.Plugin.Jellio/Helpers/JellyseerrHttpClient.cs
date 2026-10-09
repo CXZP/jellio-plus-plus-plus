@@ -1,7 +1,7 @@
 using System;
 using System.Net.Http;
 
-namespace Jellyfin.Plugin.Jellio.Helpers;
+namespace Jellyfin.Plugin.JellioDirect.Helpers;
 
 public static class JellyseerrHttpClient
 {

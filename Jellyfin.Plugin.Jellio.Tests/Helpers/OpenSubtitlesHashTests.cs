@@ -1,7 +1,7 @@
 using System.IO;
-using Jellyfin.Plugin.Jellio.Helpers;
+using Jellyfin.Plugin.JellioDirect.Helpers;
 
-namespace Jellyfin.Plugin.Jellio.Tests;
+namespace Jellyfin.Plugin.JellioDirect.Tests;
 
 public class OpenSubtitlesHashTests
 {

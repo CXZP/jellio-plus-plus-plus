@@ -1,13 +1,13 @@
 using System;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using Jellyfin.Plugin.Jellio.Helpers;
+using Jellyfin.Plugin.JellioDirect.Helpers;
 using MediaBrowser.Common.Extensions;
 using MediaBrowser.Controller.Session;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Jellyfin.Plugin.Jellio.Controllers;
+namespace Jellyfin.Plugin.JellioDirect.Controllers;
 
 [ApiController]
 [Route("jelliodirect")]

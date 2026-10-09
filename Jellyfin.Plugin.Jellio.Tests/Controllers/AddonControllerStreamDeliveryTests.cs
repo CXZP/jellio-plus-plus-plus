@@ -1,9 +1,9 @@
-using Jellyfin.Plugin.Jellio.Controllers;
-using Jellyfin.Plugin.Jellio.Models;
+using Jellyfin.Plugin.JellioDirect.Controllers;
+using Jellyfin.Plugin.JellioDirect.Models;
 using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.Entities;
 
-namespace Jellyfin.Plugin.Jellio.Tests.Controllers;
+namespace Jellyfin.Plugin.JellioDirect.Tests.Controllers;
 
 public class AddonControllerStreamDeliveryTests
 {

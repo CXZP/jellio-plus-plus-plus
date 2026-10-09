@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
-    <RootNamespace>Jellyfin.Plugin.Jellio</RootNamespace>
-    <!-- Own assembly name, so it can be installed next to the official Jellio++ -->
+    <RootNamespace>Jellyfin.Plugin.JellioDirect</RootNamespace>
+    <!-- Own namespace and assembly name, so it can be installed next to the official Jellio++
+         (same type names in both plugins broke the official one's configuration). -->
     <AssemblyName>Jellyfin.Plugin.JellioDirect</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>

@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Jellyfin.Plugin.Jellio.Configuration;
+using Jellyfin.Plugin.JellioDirect.Configuration;
 using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Plugins;
 using MediaBrowser.Model.Serialization;
 
-namespace Jellyfin.Plugin.Jellio;
+namespace Jellyfin.Plugin.JellioDirect;
 
 public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
 {
@@ -29,7 +29,7 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
             new PluginPageInfo
             {
                 Name = Name,
-                EmbeddedResourcePath = "Jellyfin.Plugin.Jellio.Web.config.html",
+                EmbeddedResourcePath = "Jellyfin.Plugin.JellioDirect.Web.config.html",
             },
         ];
     }

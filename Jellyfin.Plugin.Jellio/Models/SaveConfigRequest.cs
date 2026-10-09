@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Jellyfin.Plugin.Jellio.Models;
+namespace Jellyfin.Plugin.JellioDirect.Models;
 
 public class SaveConfigRequest
 {

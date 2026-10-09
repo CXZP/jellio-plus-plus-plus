@@ -1,6 +1,6 @@
-using Jellyfin.Plugin.Jellio.Helpers;
+using Jellyfin.Plugin.JellioDirect.Helpers;
 
-namespace Jellyfin.Plugin.Jellio.Tests.Helpers;
+namespace Jellyfin.Plugin.JellioDirect.Tests.Helpers;
 
 public class PlainTextTests
 {

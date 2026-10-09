@@ -1,6 +1,6 @@
 using System;
 
-namespace Jellyfin.Plugin.Jellio.Helpers;
+namespace Jellyfin.Plugin.JellioDirect.Helpers;
 
 public class LogEntry
 {

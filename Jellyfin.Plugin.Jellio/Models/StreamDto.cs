@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Jellyfin.Plugin.Jellio.Models;
+namespace Jellyfin.Plugin.JellioDirect.Models;
 
 public class StreamDto
 {
