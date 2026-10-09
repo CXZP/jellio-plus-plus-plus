@@ -1,4 +1,5 @@
 # Jellio Direct (unofficial, temporary)
+[![Release](https://img.shields.io/github/v/release/CXZP/jellio-plus-plus-plus)](https://github.com/CXZP/jellio-plus-plus-plus/releases)
 
 > **This is a temporary build.** It exists only until direct play lands in
 > [Jellio++](https://github.com/wujekbogdan/jellio-plus-plus) itself
@@ -38,27 +39,28 @@ Requires Jellyfin 12.
 
 ---
 
-# Jellio+++
-[![Release](https://img.shields.io/github/v/release/CXZP/jellio-plus-plus-plus)](https://github.com/CXZP/jellio-plus-plus-plus/releases)
+# About
 
 Stream your Jellyfin library directly in Stremio with seamless integration.
 
-**Jellio+++** is a fork of a fork:
+**Jellio Direct** is a fork of a fork of a fork:
 
 - [**Jellio**](https://github.com/vanchaxy/jellio) by [Vanchaxy](https://github.com/vanchaxy) - the original Jellyfin↔Stremio bridge.
 - [**Jellio+**](https://github.com/InfiniteAvenger/jellio-plus) by [InfiniteAvenger](https://github.com/InfiniteAvenger) - fork adding Jellyfin 10.11.x support.
 - [**Jellio++**](https://github.com/wujekbogdan/jellio-plus-plus) by [wujekbogdan](https://github.com/wujekbogdan) - adds HLS streaming, OpenSubtitles hashes, and public base URL support.
-- **Jellio+++** - this fork. Rewritten plugin UI, transcoding controls, subtitle support, and Jellyfin 12 compatibility.
+- [**Jellio+++**](https://github.com/hexSB/jellio-plus-plus-plus) by [hexSB](https://github.com/hexSB) - rewritten plugin UI, transcoding controls, subtitle support, and Jellyfin 12 compatibility.
+- **Jellio Direct** - this build, on top of Jellio+++. Adds direct play of the original file, catalog logos and backgrounds, and plain-text descriptions.
 
-Every fork gets another `+`. We don't make the rules.
+Every fork gets another `+`. This one ran out of them.
 
 ## Features
 
+- **Direct Play** - A "Jellio Direct" entry plays the original file, keeping lossless audio, image subtitles (PGS) and every embedded track
 - **Full Library Integration** - Access your entire Jellyfin movie and TV show collection in Stremio
 - **Cross-Platform** - Works on all Stremio-supported devices (Windows, macOS, Linux, Android, iOS)
-- **HLS Streaming** - Adaptive bitrate streaming with proper seeking via `master.m3u8`
-- **Transcoding Controls** - Choose adaptive, forced, or disabled transcoding separately for video and audio
-- **Subtitle Support** - Text subtitles (SRT, ASS, VTT) served from Jellyfin; OpenSubtitles hash for automatic subtitle matching
+- **HLS Streaming** - Adaptive bitrate streaming with proper seeking via `master.m3u8`, as a fallback below the Direct entry
+- **Transcoding Controls** - Choose adaptive, forced, or disabled transcoding separately for video and audio (HLS entries)
+- **Subtitle Support** - Text subtitles (SRT, ASS, VTT) served from Jellyfin; embedded subtitles are read by the player on the Direct entry; OpenSubtitles hash for automatic subtitle matching
 - **Audio Track Selection** - Pick specific audio tracks (language, codec, channels) directly in Stremio
 - **AV1 Compatibility** - Adaptive video mode direct streams 1080p AV1 and transcodes 4K AV1 to H.264 for smoother Stremio playback
 - **Public Base URL** - Override the server URL for HTTPS connectivity behind reverse proxies or tunnels
@@ -70,9 +72,9 @@ Every fork gets another `+`. We don't make the rules.
 
 ### Browsing Your Library in Stremio
 
-Jellio+++ allows you to instantly stream media from your Jellyfin server through Stremio. Simply search for the media in Stremio, and if it is on your Jellyfin server, it will appear!
+Jellio Direct allows you to instantly stream media from your Jellyfin server through Stremio. Simply search for the media in Stremio, and if it is on your Jellyfin server, it will appear!
 
-![Jellio+++ Streaming in Stremio](assets/jellio-stream.PNG)
+![Jellio Streaming in Stremio](assets/jellio-stream.PNG)
 
 ### Jellyseerr Integration
 
@@ -97,7 +99,15 @@ Jellio Direct isn't in a plugin repository; install it from the zip:
 
 ## Configuration
 
+### Stream Delivery
+
+- **Direct + HLS** (default) - The original file is listed first, followed by HLS streams that use the transcoding settings below
+- **Direct only** - Only the original file, with every audio track; best for players such as mpv. No transcoding
+- **HLS only** - Jellyfin HLS, one entry per audio track, transcoding as configured below
+
 ### Transcoding Settings
+
+These apply to the HLS entries; the Direct entry is never transcoded.
 
 - **Video Transcoding Mode** (default: Adaptive) - Adaptive copies AV1 up to 1080p, HEVC, and H.264 when supported and transcodes unsupported video; Force Transcode always re-encodes to H.264; No Transcode never requests video transcoding
 - **Audio Transcoding Mode** (default: Adaptive) - Adaptive copies Opus/EAC3/AAC when supported and transcodes unsupported audio; Force Transcode always re-encodes to AAC; No Transcode never requests audio transcoding
@@ -128,7 +138,7 @@ npm install
 npm run dev
 ```
 
-Served at http://localhost:5173/jelliopp/. All API calls are mocked with MSW; the UI does not connect to any backend.
+Served at http://localhost:5173/jelliodirect/. All API calls are mocked with MSW; the UI does not connect to any backend.
 
 ## Requirements
 

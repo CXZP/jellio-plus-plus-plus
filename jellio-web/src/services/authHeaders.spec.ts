@@ -9,7 +9,7 @@ describe('buildAuthHeaders', () => {
       Authorization: 'MediaBrowser Token="abc123"',
       'X-Emby-Token': 'abc123',
       'X-Emby-Authorization':
-        'MediaBrowser Client="Jellio++", Device="Web", DeviceId="dev-1", Version="1.5.0", Token="abc123"',
+        'MediaBrowser Client="Jellio Direct", Device="Web", DeviceId="dev-1", Version="1.5.0", Token="abc123"',
     });
   });
 });

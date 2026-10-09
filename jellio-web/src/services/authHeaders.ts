@@ -9,5 +9,5 @@ export const buildAuthHeaders = ({
 }) => ({
   Authorization: `MediaBrowser Token="${token}"`,
   'X-Emby-Token': token,
-  'X-Emby-Authorization': `MediaBrowser Client="Jellio++", Device="Web", DeviceId="${deviceId}", Version="${CLIENT_VERSION}", Token="${token}"`,
+  'X-Emby-Authorization': `MediaBrowser Client="Jellio Direct", Device="Web", DeviceId="${deviceId}", Version="${CLIENT_VERSION}", Token="${token}"`,
 });

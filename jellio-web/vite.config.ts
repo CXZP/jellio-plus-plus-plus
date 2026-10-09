@@ -21,7 +21,7 @@ const serveMswWorker = (): Plugin => ({
 });
 
 export default defineConfig({
-  base: '/jelliopp/',
+  base: '/jelliodirect/',
   plugins: [react(), tailwindcss(), viteSingleFile(), serveMswWorker()],
   resolve: {
     alias: {
