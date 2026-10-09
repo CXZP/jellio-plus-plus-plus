@@ -1,13 +1,14 @@
-name: "Jellio++"
-guid: "e874be83-fe36-4568-abac-f5ce0574b409"
+name: "Jellio Direct"
+guid: "fc361370-5252-4b86-86b6-c1f059dbe4cc"
 targetAbi: "12.0.0.0"
-overview: "Integrates Jellio++ features with Jellyfin."
+overview: "Unofficial, temporary Jellio build with a direct play entry."
 description: |
-  This plugin provides integration between Jellyfin and the Jellio++ service.
-  Fork of InfiniteAvenger/jellio-plus, updated for Jellyfin 12.0.0-rc1.
+  Unofficial build of Jellio+++ (hexSB) that adds a direct play entry
+  (stream?static=true) next to the HLS entries. Temporary, until direct play
+  lands in Jellio++ (wujekbogdan/jellio-plus-plus#14).
 category: "General"
-owner: "wujekbogdan"
+owner: "CXZP"
 artifacts:
-  - "Jellyfin.Plugin.Jellio.dll"
+  - "Jellyfin.Plugin.JellioDirect.dll"
 changelog: |
-  Updated for Jellyfin 12.0.0-rc1.
+  First release: direct play entry, logo and background in catalogs, plain-text descriptions.

@@ -5,7 +5,7 @@ import type { ConfigFormType } from '@/components/configForm/formSchema';
 import { getConfigFromServer } from '@/services/backendService';
 import type { Library } from '@/types';
 
-const STORAGE_KEY = 'jelliopp_config';
+const STORAGE_KEY = 'jelliodirect_config';
 const transcodingModes = ['adaptive', 'force', 'disabled'] as const;
 type TranscodingMode = (typeof transcodingModes)[number];
 

@@ -26,7 +26,7 @@ namespace Jellyfin.Plugin.Jellio.Controllers;
 
 [ApiController]
 [ConfigAuthorize]
-[Route("jelliopp/{config}")]
+[Route("jelliodirect/{config}")]
 [Produces(MediaTypeNames.Application.Json)]
 public class AddonController : ControllerBase
 {
@@ -168,7 +168,7 @@ public class AddonController : ControllerBase
 
         var baseUrl = GetBaseUrl(config.PublicBaseUrl);
         var configStr = Request.RouteValues["config"]?.ToString() ?? "";
-        var url = $"{baseUrl}/jelliopp/{configStr}/jellyseerr?type={type}&imdbId=tt{imdbId}&title={Uri.EscapeDataString(title)}";
+        var url = $"{baseUrl}/jelliodirect/{configStr}/jellyseerr?type={type}&imdbId=tt{imdbId}&title={Uri.EscapeDataString(title)}";
         if (season.HasValue)
             url += $"&season={season.Value}";
         if (episode.HasValue)
@@ -738,7 +738,7 @@ public class AddonController : ControllerBase
                     sourceStreams.Add(new StreamDto
                     {
                         Url = BuildDirectStreamUrl(baseUrl, dto.Id, source.Id, authToken),
-                        Name = "Jellio++ Direct",
+                        Name = "Jellio Direct",
                         Description = $"{source.Name}\n{DescribeDirectSource(source)}",
                         BehaviorHints = behaviorHints,
                         Subtitles = directSubtitles.Count > 0 ? directSubtitles : null,
@@ -806,7 +806,7 @@ public class AddonController : ControllerBase
                     return new StreamDto
                     {
                         Url = streamUrl,
-                        Name = $"Jellio++ HLS - {audioLabel}",
+                        Name = $"Jellio Direct HLS - {audioLabel}",
                         Description = source.Name,
                         BehaviorHints = behaviorHints,
                         Subtitles = streamSubtitles,
@@ -855,9 +855,9 @@ public class AddonController : ControllerBase
         var descriptionText = $"Play movies and series from {config.ServerName}: {string.Join(", ", catalogNames)}";
         var manifest = new
         {
-            id = "com.stremio.jelliopp",
+            id = "com.stremio.jelliodirect",
             version = PluginVersion,
-            name = "Jellio++",
+            name = "Jellio Direct",
             description = descriptionText,
             resources = new object[]
             {

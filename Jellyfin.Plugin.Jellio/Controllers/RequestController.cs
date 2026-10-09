@@ -13,7 +13,7 @@ namespace Jellyfin.Plugin.Jellio.Controllers;
 
 [ApiController]
 [ConfigAuthorize]
-[Route("jelliopp/{config}/jellyseerr")]
+[Route("jelliodirect/{config}/jellyseerr")]
 public class RequestController : ControllerBase
 {
     // Simple in-memory cache to prevent concurrent duplicate requests (userId:tmdbId:type -> timestamp)

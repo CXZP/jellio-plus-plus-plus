@@ -1,3 +1,35 @@
+# Jellio Direct (unofficial, temporary)
+
+> **This is a temporary build.** It exists only until direct play lands in
+> [Jellio++](https://github.com/wujekbogdan/jellio-plus-plus) itself
+> ([#14](https://github.com/wujekbogdan/jellio-plus-plus/pull/14)). Once that is
+> released, switch back to Jellio++; this build won't be maintained after that.
+>
+> It is based on the older Jellio+++ code by hexSB, not on the current Jellio++,
+> and was made with AI help.
+
+**What it adds**
+
+- A **Direct** entry at the top of the stream list, which plays the original file
+  (`/Videos/{id}/stream?static=true`): lossless audio (TrueHD, DTS-HD MA), image
+  subtitles (PGS) and embedded tracks are kept, and Jellyfin doesn't transcode.
+  The HLS entries stay below it as a fallback.
+- Logo and background images in catalog items, and descriptions as plain text.
+
+**Installing**
+
+1. Download the zip from [Releases](https://github.com/CXZP/jellio-plus-plus-plus/releases).
+2. Extract it into a new folder in Jellyfin's `plugins` directory
+   (for example `C:\ProgramData\Jellyfin\Server\plugins\JellioDirect`).
+3. Restart Jellyfin, then open **Dashboard → Plugins → Jellio Direct** to configure it
+   and install the addon in Stremio.
+
+It uses its own plugin ID, addon ID and URLs (`/jelliodirect/...`), so it can be
+installed next to the official Jellio++ without the two overwriting each other.
+Requires Jellyfin 12.
+
+---
+
 # Jellio+++
 [![Release](https://img.shields.io/github/v/release/hexSB/jellio-plus-plus-plus)](https://github.com/hexSB/jellio-plus-plus-plus/releases)
 

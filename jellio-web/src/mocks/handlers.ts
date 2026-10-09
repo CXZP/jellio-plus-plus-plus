@@ -1,7 +1,7 @@
 import { http, HttpResponse } from 'msw';
 
 export const handlers = [
-  http.get('/jelliopp/server-info', () =>
+  http.get('/jelliodirect/server-info', () =>
     HttpResponse.json({
       name: 'Dev Jellyfin',
       libraries: [
@@ -18,7 +18,7 @@ export const handlers = [
       ],
     }),
   ),
-  http.get('/jelliopp/get-config', () =>
+  http.get('/jelliodirect/get-config', () =>
     HttpResponse.json({
       jellyseerrEnabled: false,
       jellyseerrUrl: '',
@@ -27,11 +27,11 @@ export const handlers = [
       selectedLibraries: [],
     }),
   ),
-  http.post('/jelliopp/start-session', () =>
+  http.post('/jelliodirect/start-session', () =>
     HttpResponse.json({ accessToken: 'dev-addon-session-token' }),
   ),
-  http.post('/jelliopp/save-config', () => HttpResponse.json({ ok: true })),
-  http.get('/jelliopp/logs', () =>
+  http.post('/jelliodirect/save-config', () => HttpResponse.json({ ok: true })),
+  http.get('/jelliodirect/logs', () =>
     HttpResponse.json({
       logs: [
         {
@@ -42,5 +42,5 @@ export const handlers = [
       ],
     }),
   ),
-  http.post('/jelliopp/logs/clear', () => HttpResponse.json({ ok: true })),
+  http.post('/jelliodirect/logs/clear', () => HttpResponse.json({ ok: true })),
 ];

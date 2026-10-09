@@ -3,7 +3,7 @@ import { getServerInfo } from './backendService';
 import { withMockedFetch } from '@/test-utils/withMockedFetch';
 
 vi.mock('@/lib/utils', () => ({
-  getBaseUrl: () => 'https://test.example.com/jelliopp',
+  getBaseUrl: () => 'https://test.example.com/jelliodirect',
   getOrCreateDeviceId: () => 'test-device',
 }));
 

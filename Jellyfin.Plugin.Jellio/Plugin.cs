@@ -16,9 +16,9 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
         Instance = this;
     }
 
-    public override string Name => "Jellio++";
+    public override string Name => "Jellio Direct";
 
-    public override Guid Id => Guid.Parse("e874be83-fe36-4568-abac-f5ce0574b409");
+    public override Guid Id => Guid.Parse("fc361370-5252-4b86-86b6-c1f059dbe4cc");
 
     public static Plugin? Instance { get; private set; }
 

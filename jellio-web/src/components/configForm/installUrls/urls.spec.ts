@@ -103,12 +103,12 @@ describe('buildManifestUrl', () => {
       ServerName: 's',
     };
     const url = buildManifestUrl({
-      base: 'https://jellyfin.example.com/jelliopp',
+      base: 'https://jellyfin.example.com/jelliodirect',
       configuration,
     });
 
     const encoded = url
-      .replace('https://jellyfin.example.com/jelliopp/', '')
+      .replace('https://jellyfin.example.com/jelliodirect/', '')
       .replace('/manifest.json', '');
     expect(JSON.parse(decode(encoded))).toEqual(configuration);
   });
@@ -117,10 +117,10 @@ describe('buildManifestUrl', () => {
 describe('buildWebUrl', () => {
   it('should wrap the manifest URL in the Stremio web installer', () => {
     const url = buildWebUrl(
-      'https://jellyfin.example.com/jelliopp/x/manifest.json',
+      'https://jellyfin.example.com/jelliodirect/x/manifest.json',
     );
     expect(url).toBe(
-      'https://web.stremio.com/#/addons?addon=https%3A%2F%2Fjellyfin.example.com%2Fjelliopp%2Fx%2Fmanifest.json',
+      'https://web.stremio.com/#/addons?addon=https%3A%2F%2Fjellyfin.example.com%2Fjelliodirect%2Fx%2Fmanifest.json',
     );
   });
 });

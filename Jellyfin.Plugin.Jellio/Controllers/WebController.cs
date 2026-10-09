@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Jellyfin.Plugin.Jellio.Controllers;
 
 [ApiController]
-[Route("jelliopp")]
+[Route("jelliodirect")]
 public class WebController : ControllerBase
 {
     private const string TranscodingModeAdaptive = "adaptive";

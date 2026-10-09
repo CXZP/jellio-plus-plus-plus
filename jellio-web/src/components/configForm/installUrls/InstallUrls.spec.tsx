@@ -55,7 +55,7 @@ const Host = ({ defaultValues }: { defaultValues: ConfigFormType }) => {
 
 const decodeConfigFromUrl = (url: string): unknown => {
   const encoded = url
-    .replace(/^.*\/jelliopp\//, '')
+    .replace(/^.*\/jelliodirect\//, '')
     .replace(/\/manifest\.json$/, '');
   return JSON.parse(decode(encoded));
 };
@@ -103,7 +103,7 @@ describe('InstallUrls', () => {
       });
 
       const manifestInput = screen.getByDisplayValue(
-        /^https:\/\/jellyfin\.example\.com\/jelliopp\/.+\/manifest\.json$/,
+        /^https:\/\/jellyfin\.example\.com\/jelliodirect\/.+\/manifest\.json$/,
       );
       const displayedUrl = manifestInput.getAttribute('value') ?? '';
       expect(decodeConfigFromUrl(displayedUrl)).toMatchObject({
@@ -220,7 +220,7 @@ describe('InstallUrls', () => {
       });
 
       const manifestInput = await screen.findByDisplayValue(
-        /^https:\/\/jellyfin\.example\.com\/jelliopp\/.+\/manifest\.json$/,
+        /^https:\/\/jellyfin\.example\.com\/jelliodirect\/.+\/manifest\.json$/,
       );
       expect(
         decodeConfigFromUrl(manifestInput.getAttribute('value') ?? ''),

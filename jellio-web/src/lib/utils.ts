@@ -9,17 +9,17 @@ export const stripTrailingSlash = (url: string) => url.replace(/\/+$/, '');
 
 export function getBaseUrl(publicBaseUrl?: string): string {
   if (publicBaseUrl && publicBaseUrl.length > 0) {
-    return `${stripTrailingSlash(publicBaseUrl)}/jelliopp`;
+    return `${stripTrailingSlash(publicBaseUrl)}/jelliodirect`;
   }
-  const match = /.*?\/jelliopp/.exec(window.location.href);
+  const match = /.*?\/jelliodirect/.exec(window.location.href);
   if (!match) {
-    throw new Error('URL must include /jelliopp');
+    throw new Error('URL must include /jelliodirect');
   }
   return match[0];
 }
 
 export function getOrCreateDeviceId(): string {
-  const key = 'jelliopp_device_id';
+  const key = 'jelliodirect_device_id';
   let id = localStorage.getItem(key);
   if (!id) {
     // Simple, stable identifier for header metadata
