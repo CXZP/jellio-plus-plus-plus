@@ -596,7 +596,7 @@ public class AddonController : ControllerBase
             Poster = $"{baseUrl}/Items/{dto.Id}/Images/Primary",
             PosterShape = "poster",
             Genres = dto.Genres,
-            Description = dto.Overview,
+            Description = PlainText.FromHtml(dto.Overview),
             ImdbRating = dto.CommunityRating?.ToString("F1", CultureInfo.InvariantCulture),
             ReleaseInfo = releaseInfo,
             // Catalog items carry them too, so home screens and heroes can show the title logo and
@@ -995,7 +995,7 @@ public class AddonController : ControllerBase
                 Available = true,
                 Episode = episode.IndexNumber ?? 0,
                 Season = episode.ParentIndexNumber ?? 0,
-                Overview = episode.Overview,
+                Overview = PlainText.FromHtml(episode.Overview),
                 Released = episode.PremiereDate?.ToString("o"),
             });
             meta.Videos = videos;
