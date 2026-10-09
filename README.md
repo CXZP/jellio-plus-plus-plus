@@ -28,6 +28,17 @@ It uses its own plugin ID, addon ID and URLs (`/jelliodirect/...`), so it can be
 installed next to the official Jellio++ without the two overwriting each other.
 Requires Jellyfin 12.
 
+**Good to know**
+
+- The plugin page in Jellyfin's dashboard shows *"An error occurred while getting
+  the plugin details from the repository."* That's expected: the plugin isn't in
+  any plugin repository, so Jellyfin has nothing to look up. It works normally.
+- If you keep both addons installed in Stremio (this one and Jellio++), every
+  catalog and every stream shows up twice. Install only one of them in Stremio,
+  or remove the other one there.
+- In the stream list, **Jellio Direct** is the original file; the
+  **Jellio HLS** entries are the fallback, one per audio track.
+
 ---
 
 # Jellio+++

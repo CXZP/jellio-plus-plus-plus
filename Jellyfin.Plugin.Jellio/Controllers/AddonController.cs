@@ -806,7 +806,7 @@ public class AddonController : ControllerBase
                     return new StreamDto
                     {
                         Url = streamUrl,
-                        Name = $"Jellio Direct HLS - {audioLabel}",
+                        Name = $"Jellio HLS - {audioLabel}",
                         Description = source.Name,
                         BehaviorHints = behaviorHints,
                         Subtitles = streamSubtitles,
