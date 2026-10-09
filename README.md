@@ -1,4 +1,7 @@
 # Jellio Direct (unofficial, temporary)
+
+> **Moved:** Jellio Direct now lives in [CXZP/jellio-direct](https://github.com/CXZP/jellio-direct).
+> New versions are released there; this branch is no longer updated.
 [![Release](https://img.shields.io/github/v/release/CXZP/jellio-plus-plus-plus)](https://github.com/CXZP/jellio-plus-plus-plus/releases)
 
 > **This is a temporary build.** It exists only until direct play lands in
